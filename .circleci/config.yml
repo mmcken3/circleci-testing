@@ -23,7 +23,6 @@ jobs:
     # references golang container configration
     <<: *go_container_config
     steps:
-      - *restore_repo
       - run:
           name: "Unit Tests"
           command: go test -mod=vendor -v ./...
