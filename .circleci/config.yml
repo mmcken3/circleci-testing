@@ -1,6 +1,13 @@
 version: 2.1
 
 references:
+  # cache configs
+  restore_repo: &restore_repo
+    restore_cache:
+      name: Restore Repo Cache
+      keys:
+        - v1-repo-{{ .Environment.CIRCLE_WORKFLOW_ID }}-{{ .Revision }}
+
   default_container_config: &default_container_config
     docker:
       - image: circleci/node:latest
@@ -13,6 +20,7 @@ jobs:
   checkout_code:
     <<: *default_container_config
     steps:
+      - *restore_repo
       - checkout
       - save_cache:
           key: v1-repo-{{ .Environment.CIRCLE_WORKFLOW_ID }}-{{ .Revision }}
@@ -23,6 +31,7 @@ jobs:
     # references golang container configration
     <<: *go_container_config
     steps:
+      - *restore_repo
       - run:
           name: "Unit Tests"
           command: go test -v ./...
