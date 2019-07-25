@@ -15,7 +15,7 @@ func TestIncrNum(t *testing.T) {
 		{
 			desc: "one",
 			n:    1,
-			incr: 2,
+			incr: 3,
 		},
 	}
 	for _, tC := range testCases {

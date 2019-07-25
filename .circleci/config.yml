@@ -25,7 +25,7 @@ jobs:
     steps:
       - run:
           name: "Unit Tests"
-          command: go test -mod=vendor -v ./...
+          command: go test -v ./...
 
 workflows:
   version: 2
