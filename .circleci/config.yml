@@ -1,0 +1,38 @@
+version: 2.1
+
+references:
+  default_container_config: &default_container_config
+    docker:
+      - image: circleci/node:latest
+  # configuration for golang
+  go_container_config: &go_container_config
+    docker:
+      - image: circleci/golang:1.12
+
+jobs:
+  checkout_code:
+    <<: *default_container_config
+    steps:
+      - checkout
+      - save_cache:
+          key: v1-repo-{{ .Environment.CIRCLE_WORKFLOW_ID }}-{{ .Revision }}
+          paths:
+            - .
+
+  server_tests:
+    # references golang container configration
+    <<: *go_container_config
+    steps:
+      - *restore_repo
+      - run:
+          name: "Unit Tests"
+          command: go test -mod=vendor -v ./...
+
+workflows:
+  version: 2
+  ci: 
+    jobs:
+      - checkout_code
+      - server_tests:
+          requires:
+            - checkout_code
